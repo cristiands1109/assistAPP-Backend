@@ -20,8 +20,17 @@ router.get('/', function (req = request, resp = response) {
 
 
 
+   const a = req.url
+   if (a === '/'){
+      return resp.json(a)
+   } else {
+      const b = req.url
+      return resp.json({
+         msg: 'produc',
+         b         
+      })
+   }
    resp.status(200).json(geo)
-
    
 });
 
