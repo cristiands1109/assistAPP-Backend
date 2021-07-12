@@ -7,24 +7,20 @@ const router = Router();
 
 
 router.get('/', function (req = request, resp = response) {
-  
-   const ip = req.socket.remoteAddress;
-   console.log(req.socket.remoteAddress);
+   
+   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
 
-   // const ip2 = "207.97.227.239"
-   // const ge2 = geoIP.lookup(ip2)
+   if (req.socket.remoteAddress ) {
+      return resp.status(404).json({
+         msg: 'No es posible obtener la ubicacion, contacte con el administrador'
+      })
+   }
 
-   // const [la, lon] = ge2.ll
-   // console.log(la);
-   // console.log(lon);
+   const geo = geoIP.lookup(ip)
 
-   // console.log('ip2' , ge2);
-   const ip2 = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
 
-   resp.status(200).json({
-      ip,
-      ip2
-   })
+
+   resp.status(200).json(geo)
 
    
 });
