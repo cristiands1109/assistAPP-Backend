@@ -17,17 +17,9 @@ router.get('/', function (req = request, resp = response) {
    // }
 
    const geo = geoIP.lookup(ip)
-
-
-
-   const a = req.url
-   if (a === '/'){
-      return resp.json(a)
-   } else {
-      const b = req.url
-      return resp.json({
-         msg: 'produc',
-         b         
+   if ( geo === null) {
+      return resp.status(404).json({
+         msg: 'No fue posible obtener localizacion, consultar con el Adminstrador'
       })
    }
    resp.status(200).json(geo)
