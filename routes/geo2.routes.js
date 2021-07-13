@@ -12,8 +12,10 @@ router.get('/', function (req = request, resp = response) {
    const endpoint = 'http://api.ipstack.com/'
    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
    let data = ''
+   const URL = `${endpoint}${ip}?access_key=${access_key}`
 
-   http.get(`${endpoint}${ip}?access_key=${access_key}`, datos => {
+   console.log(URL);
+   http.get(URL, (datos) => {
       data = datos
    })
    // if (req.socket.remoteAddress ) {
@@ -21,7 +23,7 @@ router.get('/', function (req = request, resp = response) {
    //       msg: 'No es posible obtener la ubicacion, contacte con el administrador'
    //    })
    // }
-   resp.status(200).json(data);
+   resp.status(200).json(data, URL);
    
    
 });
