@@ -9,7 +9,8 @@ const prueba = (req = request, resp = response) => {
     const point = 'http://api.ipstack.com';
     const accesskey = '4c2594c643861f24b775bb0d5ca4086e';
     // const ipprueba = '181.123.0.29'
-    const ipprueba = req.headers['x-forwarded-for'] || '181.123.0.29';
+    // const ipprueba = req.headers['x-forwarded-for'] || '181.123.0.29';
+    const ipprueba = req.headers['x-forwarded-for'];
     const url = `${point}/${ipprueba}?access_key=${accesskey}`;
 
     
