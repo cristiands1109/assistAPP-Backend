@@ -26,7 +26,8 @@ class Server {
             emergencia: '/assistapp/emergencia',
             alerta: '/assistapp/alerta',
             upload: '/assistapp/upload',
-            prueba: '/assistapp/geo'
+            prueba: '/assistapp/geo',
+            pruebageo: '/assistapp/prueba',
         }
 
 
@@ -102,6 +103,9 @@ class Server {
 
         /** ruta geo PRUEBA */
         this.app.use(this.paths.prueba, require('../routes/geo.routes'));
+
+        /** ruta geo PRUEBA */
+        this.app.use(this.paths.pruebageo, require('../routes/prueba.routes'));
 
     }
     
