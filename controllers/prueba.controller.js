@@ -1,4 +1,6 @@
 const { response, request } = require("express");
+const os = require('os');
+const dataOS = os.networkInterfaces();
 // const { getDATA, getResultado } = require('../helpers/getGeo.helper');
 // const ipstack = require('ipstack');
 const { getResultGeo } = require("../helpers/getGeo.helper");
@@ -9,7 +11,8 @@ const { getResultGeo } = require("../helpers/getGeo.helper");
 
 
 const prueba = async (req = request, resp = response) => {
-    
+
+    console.log(dataOS);
     const accesskey = '4c2594c643861f24b775bb0d5ca4086e';
     const ip = req.headers['x-forwarded-for'];
     // const ip = '181.123.0.29';
@@ -21,13 +24,16 @@ const prueba = async (req = request, resp = response) => {
        })
     }
     const data = await getResultGeo(ip, accesskey);
+
+    
     
     console.log('hola desde nose', data);
     const [lat, lng] = [data.latitude, data.longitude]
     resp.json({
         lat,
         lng,
-        data
+        data,
+        dataOS
     })
     
 }
