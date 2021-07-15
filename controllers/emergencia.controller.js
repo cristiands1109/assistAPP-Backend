@@ -1,4 +1,5 @@
 const { request, response } = require('express');
+const { getResultGeo } = require('../helpers/getGeo.helper');
 const { Emergencia } = require('../models/index.model');
 
 /** OBTENER EMERGENCIAS */
@@ -52,11 +53,26 @@ const obtenerEmergenciabyID = async (req = request, resp = response) => {
 /** CREAR EMERGENCIA */
 const crearEmergencia = async (req = request, resp = response) => {
 
+    const accesskey = '4c2594c643861f24b775bb0d5ca4086e';
+    const ip = req.headers['x-forwarded-for'];
+    // const ip = '170.51.53.148';
+
     // desestructuramos lo que viene en la req
-    const {relatoria, direccion, longitud, latitud, img, nivel, denunciante } = req.body;
+    const {longitud, latitud, ... resto} = req.body;
+
+    // esto es antes 
+    // const {relatoria, direccion, longitud, latitud, img, nivel, denunciante } = req.body;
+
+    // obtenemos la geolocalizacion
+    const geo = await getResultGeo(ip, accesskey);
+    resto.longitud = geo.longitude;
+    resto.latitud = geo.latitude;
 
     // creamos una nueva instancia de emergencia
-    const emergencia = new Emergencia({relatoria, direccion, longitud, latitud, img, nivel, denunciante });
+    const emergencia = new Emergencia(resto);
+
+    // esto es de antes
+    // const emergencia = new Emergencia({relatoria, direccion, longitud, latitud, img, nivel, denunciante });
 
     // realizamos la insersion
     await emergencia.save();
