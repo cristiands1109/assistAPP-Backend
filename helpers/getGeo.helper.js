@@ -12,7 +12,6 @@ const getResultGeo = (ip = '', accesskey = '') => {
             resolve(result)
         });
     });
-
 }
 
 module.exports = {
