@@ -1,7 +1,5 @@
 const { response, request } = require("express");
 const { getResultGeo } = require("../helpers/getGeo.helper");
-const  geo  = require('geolocation')
-
 
 
 
@@ -10,14 +8,7 @@ const  geo  = require('geolocation')
 
 
 const prueba = async (req = request, resp = response) => {
-    
-
-    
-    geo.getCurrentPosition((err, success) => {
-        if(err) console.log(err);
-        else resp.send(success);
-    })
-
+ 
     const accesskey = '4c2594c643861f24b775bb0d5ca4086e';
     // const ip = req.headers['x-forwarded-for'];
     const ip = '181.123.0.29';
