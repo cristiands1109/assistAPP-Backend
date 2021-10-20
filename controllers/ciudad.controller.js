@@ -11,7 +11,7 @@ const obtenerCiudades = async (req = request, resp = response) => {
 
     // Hacemos la consulta en la base de datos
     const [ciudadDB, total] = await Promise.all([
-        Ciudad.find({estado: true}) .populate('departamento', {descripcion: 1, _id: 0})
+        Ciudad.find({estado: true}) .populate('departamento', {descripcion: 1, _id: 1})
                                     .select({createdAt: 0, updatedAt: 0}),
         Ciudad.countDocuments({estado: true})
     ])
@@ -26,7 +26,7 @@ const obtenerCiudades = async (req = request, resp = response) => {
     // En caso que exitan, mostramos los registros
     resp.status(200).json({
         total,
-        Ciudad: ciudadDB
+        ciudad: ciudadDB
     })
 
 };
@@ -39,7 +39,7 @@ const obtenerCiudadbyID = async (req = request, resp = response) => {
     const {ciudadID} = req.params;
 
     // obtenemos el registro de la base de datos
-    const ciudadDB = await Ciudad.findById(ciudadID).populate('departamento', {descripcion: 1, _id: 0})
+    const ciudadDB = await Ciudad.findById(ciudadID).populate('departamento', {descripcion: 1, _id: 1})
                                                     .select({createdAt: 0, updatedAt: 0})
 
     // Verificamos si el registro no esta dado de baja
@@ -49,8 +49,35 @@ const obtenerCiudadbyID = async (req = request, resp = response) => {
         })
     }
 
+    // console.log(ciudadDB);
+    
     // en caso que todo este bien procedemos a mostrar el resultado
     resp.status(200).json(ciudadDB);
+}
+
+/** OBTENER CIUDADES BY DEPARTAMENTO ID */
+const obtenerCiudadesbyDepartamento = async (req = request, resp = response) => {
+
+    const {departamentoID} = req.params;
+
+
+    const [ciudadDB, total] = await Promise.all ([
+        Ciudad.find({departamento: departamentoID, estado: true}),
+        Ciudad.countDocuments({departamento: departamentoID, estado: true})
+    ])
+
+    if(total === 0) {
+        return resp.status(404).json({
+            msg: 'No hay registros'
+        })
+    }
+
+     // En caso que exitan, mostramos los registros
+     resp.status(200).json({
+        total,
+        Ciudad: ciudadDB
+    })
+
 }
 
 /** CREAR CIUDAD */
@@ -135,7 +162,7 @@ const eliminarCiudad = async (req = request, resp = response) => {
     }
 
     // realiza la actualizacion
-    const ciudadDB = await Ciudad.findByIdAndUpdate(ciudadID, {estado: false}, {new: true});
+    const ciudadDB = await Ciudad.findByIdAndDelete(ciudadID);
 
     // En caso que todo se haya realizado bien
     resp.status(200).json({
@@ -150,6 +177,7 @@ const eliminarCiudad = async (req = request, resp = response) => {
 module.exports = {
     obtenerCiudades,
     obtenerCiudadbyID,
+    obtenerCiudadesbyDepartamento,
     crearCiudad,
     editarCiudad,
     eliminarCiudad

@@ -15,11 +15,11 @@ const AlertaSchema = Schema({
         ref: 'Emergencia',
         required: [true, 'El ID Emergencia es obligatorio']
     },
-    estados: {
-        type: Schema.Types.ObjectId,
-        ref: 'Estado',
-        required: [true, 'El ID Estado es obligatorio']
-    }
+    // estados: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Estado',
+    //     required: [true, 'El ID Estado es obligatorio']
+    // }
 }, {
     timestamps: true
 })

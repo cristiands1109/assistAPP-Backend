@@ -14,12 +14,14 @@ const obtenerNivel = async (req = request, resp = response) => {
     // validamos si existen registros para mostrar
     if (total === 0) {
         return resp.status(404).json({
+            total,
             msg: 'No hay registros'
         })
     }
 
     // si todo sale bien entonces procedemos a mostrar el resultado
     resp.status(200).json({
+        ok: true,
         total,
         nivel
     })
@@ -59,9 +61,11 @@ const crearNivel = async (req = request, resp = response) => {
     const nivelDB = await Nivel.findOne({prioridad});
     // hacemos la validacion para que no inserte un regitro que ya existe
     if(nivelDB) {
-        return resp.status(400).json({
-            msg: `El nivel ${prioridad}, ya existe en la base de datos`
-        })
+        if( nivelDB.estado === true) {
+            return resp.status(400).json({
+                msg: `El nivel ${prioridad}, ya existe en la base de datos`
+            })
+        }
     }
 
     // en caso que no exista entonces procedemos a insertar y guarda
@@ -126,7 +130,7 @@ const eliminarNivel = async (req = request, resp = response) => {
     }
 
     // realiza la actualizacion
-    const nivel = await Nivel.findByIdAndUpdate(nivelID, {estado: false});
+    const nivel = await Nivel.findByIdAndDelete(nivelID);
 
     // en caso que todo se haya realizado con exito entonces se procede a mostrar el mensaje
     resp.status(200).json({

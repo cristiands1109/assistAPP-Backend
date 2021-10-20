@@ -9,8 +9,8 @@ const obtenerAlerta = async (req = request, resp = response) => {
     // Hacemos las consultas a la bd
     const [alerta, total] = await Promise.all([
         Alerta.find({estado: true}).populate('operador', {_id: 0, nombre: 1, apellido: 1}).select({createdAt: 0, updatedAt: 0})
-                                    .populate('emergencia', {_id: 0, relatoria: 1, direccion: 1})
-                                    .populate('estados', {_id: 0, descripcion: 1}),
+                                    .populate('emergencia', {_id: 0, relatoria: 1, direccion: 1}),
+                                    // .populate('estados', {_id: 0, descripcion: 1}),
         Alerta.countDocuments({estado: true})
     ])
 
@@ -36,7 +36,7 @@ const obtenerAlertabyID = async (req = request, resp = response) => {
 
     const alertaDB = await Alerta.findById(alertaID).populate('operador', {_id: 0, nombre: 1, apellido: 1}).select({createdAt: 0, updatedAt: 0, estado: 0})
                                                     .populate('emergencia', {_id: 0, relatoria: 1, direccion: 1})
-                                                    .populate('estados', {_id: 0, descripcion: 1})
+                                                    // .populate('estados', {_id: 0, descripcion: 1})
 
     if (alertaDB.estado === false) {
         return resp.status(400).json({
@@ -52,7 +52,8 @@ const obtenerAlertabyID = async (req = request, resp = response) => {
 const crearAlerta = async (req = request, resp = response) => {
 
     // desestructuramos lo que viene en la req
-    const {operador, emergencia, estados } =req.body
+    // const {operador, emergencia, estados } =req.body
+    const {operador, emergencia} =req.body
 
     // buscamos en la bd que no exista una emergencia similar ingresada
     const alertaDB = await Alerta.findOne({emergencia});
@@ -63,7 +64,8 @@ const crearAlerta = async (req = request, resp = response) => {
     }
 
     // en caso que no exista se procede a la insersion
-    const alerta = new Alerta({operador, emergencia, estados});
+    // const alerta = new Alerta({operador, emergencia, estados});
+    const alerta = new Alerta({operador, emergencia});
     alerta.save();
 
     resp.status(200).json({
@@ -95,9 +97,9 @@ const editarAlerta = async (req = request, resp = response) => {
     }
 
     // si viene el cambio de estado se procede a modificar
-    if(resto.estados) {
-        resto.estados = req.body.estados;
-    }
+    // if(resto.estados) {
+    //     resto.estados = req.body.estados;
+    // }
 
     // realizar la actualizacion
     const alerta = await Alerta.findByIdAndUpdate(alertaID, resto, {new: true});

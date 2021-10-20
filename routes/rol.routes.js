@@ -4,6 +4,7 @@ const { check } = require('express-validator');
 
 // Middlewares
 const { validarCampos, validarROL } = require('../middlewares/index.middlewares')
+const { validarJWT } = require('../middlewares/index.middlewares');
 
 // Helpers
 const { existeRolID } = require('../helpers/db-validators.helper');
@@ -17,7 +18,6 @@ const {
     obtenerRolbyID 
 } = require('../controllers/rol.controller');
 
-const { validarJWT } = require('../middlewares/index.middlewares');
 
 
 const router = Router();

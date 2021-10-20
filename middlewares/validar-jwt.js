@@ -15,7 +15,6 @@ const validarJWT = async (req = request, resp = response, next) => {
 
         // desestructuramos para verificar el token
         const {userID} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
-
         // buscamos el registro en la base de datos
         const usuario = await Usuario.findById(userID);
 
@@ -33,7 +32,7 @@ const validarJWT = async (req = request, resp = response, next) => {
                 msg: 'No hay token en la peticion, debe autenticarse - estado false'
             })
         }
-
+//
         // en caso que todo este bien, establecemos el usuario en la req
         req.usuario = usuario;
 
@@ -42,7 +41,7 @@ const validarJWT = async (req = request, resp = response, next) => {
         
     } catch (error) {
 
-        console.log(error);
+        // console.log(error);
         resp.status(401).json({
             msg: 'Token Invalido'
         })

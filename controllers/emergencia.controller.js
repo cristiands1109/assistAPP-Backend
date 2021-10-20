@@ -8,8 +8,10 @@ const obtenerEmergencia = async (req = request, resp = response) => {
     // Realizamos la consulta en la bd 
     const [emergenciaDB, total] = await Promise.all([
         // Emergencia.find({estado: true}).populate('nivel', {descripcion: 1, _id: 0}).select({createdAt: 0, updatedAt: 0}),
-        Emergencia.find({estado: true}).populate('nivel', {descripcion: 1, _id: 0}).select({createdAt: 0, updatedAt: 0})
-                                        .populate('denunciante', {_id: 0, nombre: 1, apellido: 1}),
+        Emergencia.find({estado: true}).populate('tipo_emergencia', {descripcion: 1, _id: 1}).select({createdAt: 0, updatedAt: 0})
+                                        .populate('nivel', {descripcion: 1, _id: 1}).select({createdAt: 0, updatedAt: 0})
+                                        .populate('denunciante', {_id: 1, nombre: 1, apellido: 1, celular: 1})
+                                        .populate('estados',{descripcion: 1, _id: 1}),
         Emergencia.countDocuments({estado: true})
     ]);
 
@@ -36,8 +38,10 @@ const obtenerEmergenciabyID = async (req = request, resp = response) => {
 
     // obtenemos el registro
     const emergencia = await Emergencia.findById(emergenciaID)
-                                        .populate('nivel', {descripcion: 1, _id: 0}).select({createdAt: 0, updatedAt: 0})
-                                        .populate('denunciante', {_id: 0, nombre: 1, apellido: 1});
+                                        .populate('tipo_emergencia', {descripcion: 1, _id: 0}).select({createdAt: 0, updatedAt: 0})
+                                        .populate('nivel', {descripcion: 1, _id: 1}).select({createdAt: 0, updatedAt: 0})
+                                        .populate('denunciante', {_id: 0, nombre: 1, apellido: 1})
+                                        .populate('estados',{descripcion: 1, _id: 1});
 
     // consultamos si el registro se encuentra activo
     if (emergencia.estado === false){
@@ -53,28 +57,30 @@ const obtenerEmergenciabyID = async (req = request, resp = response) => {
 /** CREAR EMERGENCIA */
 const crearEmergencia = async (req = request, resp = response) => {
 
-    const accesskey = '4c2594c643861f24b775bb0d5ca4086e';
-    const ip = req.headers['x-forwarded-for'];
+    // const accesskey = '4c2594c643861f24b775bb0d5ca4086e';
+    // const ip = req.headers['x-forwarded-for'];
     // const ip = '170.51.53.148';
 
     // desestructuramos lo que viene en la req
-    const {longitud, latitud, ... resto} = req.body;
+    // const {longitud, latitud, ... resto} = req.body;
 
     // esto es antes 
-    // const {relatoria, direccion, longitud, latitud, img, nivel, denunciante } = req.body;
-
+    const {relatoria, direccion, longitud, latitud, img, nivel, denunciante, tipo_emergencia, estados } = req.body;
+    // console.log('back', img);
+    
     // obtenemos la geolocalizacion
-    const geo = await getResultGeo(ip, accesskey);
-    resto.longitud = geo.longitude;
-    resto.latitud = geo.latitude;
+    // const geo = await getResultGeo(ip, accesskey);
+    // resto.longitud = geo.longitude;
+    // resto.latitud = geo.latitude;
 
     // creamos una nueva instancia de emergencia
-    const emergencia = new Emergencia(resto);
+    // const emergencia = new Emergencia(resto);
 
     // esto es de antes
-    // const emergencia = new Emergencia({relatoria, direccion, longitud, latitud, img, nivel, denunciante });
+    const emergencia = new Emergencia({relatoria, direccion, longitud, latitud, img, nivel, denunciante, tipo_emergencia, estados });
 
     // realizamos la insersion
+    // console.log('back end', emergencia);
     await emergencia.save();
 
     // en casao que no haya errores entonces mostramos el mensaje
@@ -93,9 +99,12 @@ const editarEmergencia = async ( req = request, resp = response) => {
     const { emergenciaID } = req.params;
     const {_id, estado, denunciante, img, ...resto} = req.body;
 
+    
     // buscamos el registro para poder consultar por el estado
     const info = await Emergencia.findById(emergenciaID);
-
+    
+    
+    
     // realizamos la consulta por el estado de la emergencia
     if (info.estado === false) {
         return resp.status(404).json({
@@ -104,9 +113,11 @@ const editarEmergencia = async ( req = request, resp = response) => {
     }
 
     // realizamos la actualizacion
-    const emergencia = await Emergencia.findOneAndUpdate(emergenciaID, resto, {new: true})
+    const emergencia = await Emergencia.findByIdAndUpdate(emergenciaID, resto, {new: true})
                                         .populate('nivel', {descripcion: 1, _id: 0}).select({createdAt: 0, updatedAt: 0})
-                                        .populate('denunciante', {_id: 0, nombre: 1, apellido: 1});
+                                        .populate('denunciante', {_id: 0, nombre: 1, apellido: 1})
+                                        .populate('estados',{descripcion: 1, _id: 1});
+
 
     // si todo sale bien
     resp.status(200).json({
@@ -131,7 +142,8 @@ const eliminarEmergencia = async (req = request, resp = response) => {
     // realizamos la actualizacion
     const emergencia = await Emergencia.findByIdAndUpdate(emergenciaID, {estado: false}, {new: true})
                                         .populate('nivel', {descripcion: 1, _id: 0}).select({createdAt: 0, updatedAt: 0})
-                                        .populate('denunciante', {_id: 0, nombre: 1, apellido: 1});
+                                        .populate('denunciante', {_id: 0, nombre: 1, apellido: 1})
+                                        .populate('estados',{descripcion: 1, _id: 1});
 
     // en caso que todo se haya realizado correctamente, mostramos el mensaje
     resp.status(200).json({

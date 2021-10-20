@@ -26,6 +26,7 @@ class Server {
             emergencia: '/assistapp/emergencia',
             alerta: '/assistapp/alerta',
             upload: '/assistapp/upload',
+            tipo_emergencia: '/assistapp/tipoemergencia',
             prueba: '/assistapp/geo',
             pruebageo: '/assistapp/prueba',
         }
@@ -101,6 +102,9 @@ class Server {
         /** ruta upload */
         this.app.use(this.paths.upload, require('../routes/upload.routes'));
 
+         /** ruta tipo emergencia */
+         this.app.use(this.paths.tipo_emergencia, require('../routes/tipoEmergencia.routes'));
+
         /** ruta geo PRUEBA */
         this.app.use(this.paths.prueba, require('../routes/geo.routes'));
 
@@ -108,7 +112,7 @@ class Server {
         this.app.use(this.paths.pruebageo, require('../routes/prueba.routes'));
 
     }
-    
+    // subido a base de datos normal ojo
     
     // Metodo de coneccion de base de datos
     async ConnectionDB() {

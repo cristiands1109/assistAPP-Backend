@@ -8,12 +8,12 @@ const { validarSubirArchivo, validarCampos, validarROL, validarJWT } = require('
 
 const router = Router();
 
-router.post('/emergencia/:emergenciaID', [
+router.post('/emergencia/', [
     validarJWT,
-    validarROL('ADMIN_ROL', 'DEP_ROL'),
+    validarROL('ADMIN_ROL', 'DEP_ROL', 'USER_ROL'),
     validarSubirArchivo,
-    check('emergenciaID', 'La Emergencia ID es obligatorio').isMongoId(),
-    check('emergenciaID', 'La Emergencia ID no existe en la base de datos').custom(existeEmergenciaID),
+    // check('emergenciaID', 'La Emergencia ID es obligatorio').isMongoId(),
+    // check('emergenciaID', 'La Emergencia ID no existe en la base de datos').custom(existeEmergenciaID),
     validarCampos
 ], actualizarImagenCloudinary)
 

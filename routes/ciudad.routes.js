@@ -8,7 +8,8 @@ const {
     crearCiudad, 
     editarCiudad, 
     eliminarCiudad, 
-    obtenerCiudadbyID 
+    obtenerCiudadbyID, 
+    obtenerCiudadesbyDepartamento
 } = require('../controllers/ciudad.controller');
 
 // Middlewares
@@ -40,6 +41,12 @@ router.get('/:ciudadID', [
     check('ciudadID', 'El Ciudad ID no es un ID valido de Base de Datos').custom(existeCiudadID),
     validarCampos
 ], obtenerCiudadbyID);
+
+router.get('/consulta/:departamentoID', [
+    check('departamentoID', 'El Ciudad ID no es un ID valido').isMongoId(),
+    check('departamentoID', 'El Ciudad ID no es un ID valido de Base de Datos').custom(existeDepartamentoID),
+    validarCampos
+], obtenerCiudadesbyDepartamento)
 
 /** CREAR CIUDAD */
 router.post('/', [

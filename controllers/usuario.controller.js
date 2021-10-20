@@ -1,6 +1,7 @@
 // Importaciones
 const { request, response } = require("express");
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const {generarJWT} = require('../helpers/generar-jwt')
 
 // Modelo
 const { Usuario } = require("../models/index.model");
@@ -40,6 +41,7 @@ const obtenerUsuariobyID = async (req = request, resp = response) => {
     // Desestructuramos lo que viene en los parametros
     const { celularID } = req.params
 
+    
     // obtenemos los registros de la base de datos
     const usuario = await Usuario.findOne({celular: celularID});
 
@@ -55,13 +57,14 @@ const obtenerUsuariobyID = async (req = request, resp = response) => {
 }
 
 
+
 /** CREAR USUARIO */
 
 const crearUsuario = async (req = request, resp = response) => {
 
     // obtenemos lo que viene en la req
-    const {celular, nombre, apellido, rol, ciudad, departamento, password} = req.body;
-    const usuario = new Usuario({celular, nombre, apellido, rol, ciudad, departamento, password});
+    const {celular, nombre, apellido, rol, /*ciudad, departamento,*/ password} = req.body;
+    const usuario = new Usuario({celular, nombre, apellido, rol:'60df6d1b1065760e1e9e7f5c', /*ciudad, departamento,*/ password});
 
     // validadciones de si existe o no un celular duplicado lo hacemos en la routes
     
@@ -71,10 +74,12 @@ const crearUsuario = async (req = request, resp = response) => {
 
     // Guardamos en la BD
     await usuario.save();
-
+    
+    const token = await generarJWT(usuario._id)
     // En caso que todo se haya hecho bien entonces procedemos a mostrar la respuesta
     resp.status(200).json({
         msg: 'Registro insertado correctamente',
+        token,
         usuario
     })
 
@@ -85,7 +90,7 @@ const crearUsuario = async (req = request, resp = response) => {
 const editarUsuario = async (req = request, resp = response) => {
     // obtenemos los datos del params y de la req
     const {celularID} = req.params;
-    const {_id, password, celular, rol, ...resto} = req.body;
+    const {_id, password, celular, /*rol,*/ ...resto} = req.body;
 
 
     // consulta para validacion de estado
@@ -101,14 +106,14 @@ const editarUsuario = async (req = request, resp = response) => {
     if(password) {
         const salt = bcrypt.genSaltSync(10);
         resto.password = bcrypt.hashSync(password, salt);
-        console.log('nuevo' ,resto.password);
+        // console.log('nuevo' ,resto.password);
     }
     
     // realizamos la actualizacion
     const usuario = await Usuario.findOneAndUpdate({celular: celularID}, resto, {new: true})
-                                    .populate('rol', {descripcion: 1, _id: 0}).select({createdAt: 0, updatedAt: 0})
-                                    .populate('ciudad', {descripcion: 1, _id: 0}).select({createdAt: 0, updatedAt: 0})
-                                    .populate('departamento', {descripcion: 1, _id: 0}).select({createdAt: 0, updatedAt: 0});
+                                    .populate('rol', {descripcion: 1, _id: 1}).select({createdAt: 0, updatedAt: 0})
+                                    .populate('ciudad', {descripcion: 1, _id: 1}).select({createdAt: 0, updatedAt: 0})
+                                    .populate('departamento', {descripcion: 1, _id: 1}).select({createdAt: 0, updatedAt: 0});
 
     // si todo sale bien mostramos la respuesta
     resp.status(200).json({

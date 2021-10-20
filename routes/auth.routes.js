@@ -1,8 +1,9 @@
 // Importaciones
 const Router = require('express');
 const { check } = require('express-validator');
-const { login } = require('../controllers/auth.controller');
+const { login, revalidarToken, usuariobyToken } = require('../controllers/auth.controller');
 const { existeUsuario } = require('../helpers/db-validators.helper');
+const { validarJWT } = require('../middlewares/validar-jwt');
 const { validarCampos } = require('../middlewares/validarCampos.middlewares');
 
 // creamos una nueva instacia de routes
@@ -14,6 +15,10 @@ router.post('/', [
     check('password', 'El password es obligatorio').not().isEmpty(),
     validarCampos
 ], login);
+
+
+router.get('/renew', validarJWT, revalidarToken);
+router.get('/getuser', validarJWT, usuariobyToken);
 
 
 

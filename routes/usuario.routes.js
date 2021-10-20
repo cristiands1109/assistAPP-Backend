@@ -45,24 +45,25 @@ router.get('/:celularID', [
     validarCampos
 ], obtenerUsuariobyID);
 
+
 /** CREAR USUARIO */
 router.post('/', [
-    validarJWT,
-    validarROL('ADMIN_ROL', 'USER_ROL'),
+    // validarJWT,
+    // validarROL('ADMIN_ROL', 'USER_ROL'),
     check('celular', 'El celular es obligatorio').not().isEmpty(),
     check('celular', 'El celular debe ser unico').custom(duplicadoUSER),
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('apellido', 'El apellido es obligatorio').not().isEmpty(),
     check('password', 'El password es obligatorio').not().isEmpty(),
-    check('ciudad', 'El Ciudad ID no es un ID valido').isMongoId(),
-    check('ciudad', 'El Ciudad ID no es un ID valido de Base de Datos').custom(existeCiudadID),
-    check('ciudad', 'La Ciudad no existe en la Base de Datos').custom(validarEstadoCiudad),
-    check('departamento', 'El Departamento ID no es un ID valido').isMongoId(),
-    check('departamento', 'El Departamento ID no es un ID valido de Base de Datos').custom(existeDepartamentoID),
-    check('departamento', 'El Departamento no existe en la Base de Datos').custom(validarEstadoDepartamento),
-    check('rol', 'El Rol ID no es un ID valido').isMongoId(),
-    check('rol', 'El Rol ID no es un ID valido de Base de Datos').custom(existeRolID),
-    check('rol', 'El Rol no existe en la base de datos').custom(validarEstadoRol),
+    // check('ciudad', 'El Ciudad ID no es un ID valido').isMongoId(),
+    // check('ciudad', 'El Ciudad ID no es un ID valido de Base de Datos').custom(existeCiudadID),
+    // check('ciudad', 'La Ciudad no existe en la Base de Datos').custom(validarEstadoCiudad),
+    // check('departamento', 'El Departamento ID no es un ID valido').isMongoId(),
+    // check('departamento', 'El Departamento ID no es un ID valido de Base de Datos').custom(existeDepartamentoID),
+    // check('departamento', 'El Departamento no existe en la Base de Datos').custom(validarEstadoDepartamento),
+    // check('rol', 'El Rol ID no es un ID valido').isMongoId(),
+    // check('rol', 'El Rol ID no es un ID valido de Base de Datos').custom(existeRolID),
+    // check('rol', 'El Rol no existe en la base de datos').custom(validarEstadoRol),
     validarCampos
 ], crearUsuario);
 

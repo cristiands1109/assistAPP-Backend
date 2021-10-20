@@ -27,8 +27,8 @@ router.get('/:alertaID', [
 router.post('/', [
     validarJWT,
     validarROL('ADMIN_ROL', 'DEP_ROL'),
-    check('estados', 'El Estado ID no es un ID valido').isMongoId(),
-    check('estados', 'El Estado ID no es un ID valido de Base de Datos').custom(existeEstadoID),
+    // check('estados', 'El Estado ID no es un ID valido').isMongoId(),
+    // check('estados', 'El Estado ID no es un ID valido de Base de Datos').custom(existeEstadoID),
     check('emergencia', 'La Emergencia ID es obligatorio').not().isEmpty(),
     check('emergencia', 'La Emergencia ID no existe en la base de datos').custom(existeEmergenciaID),
     check('operador', 'El celular es obligatorio').not().isEmpty(),

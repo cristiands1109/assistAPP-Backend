@@ -1,4 +1,4 @@
-const { Rol, Departamento, Ciudad, Usuario, Nivel, Estados, Emergencia, Alerta } = require("../models/index.model")
+const { Rol, Departamento, Ciudad, Usuario, Nivel, Estados, Emergencia, Alerta, TipoEmergencia } = require("../models/index.model")
 
 
 /** VALIDACIONES DE SI EXISTE ID */
@@ -75,6 +75,7 @@ const existeUsuario = async (celular) => {
 }
 
 
+
 /** NIVEL */
 const existeNivelID = async (nivelID) => {
     const existe = await Nivel.findById(nivelID);
@@ -134,6 +135,17 @@ const existeAlertaID = async (alertaID) => {
     }
 }
 
+/** TIPO EMERGENCIA */
+const existeTipoEmergenciaID = async (tipoEmergenciaID) => {
+    const existe = await TipoEmergencia.findById(tipoEmergenciaID);
+
+    // Validamos que exista el registro, sino existe entonces mostramos el mensaje de error
+    if(!existe) {
+        throw new Error(`El Tipo Emergencia ID: ${tipoEmergenciaID}, no existe en la base de datos`);
+    }
+
+}
+
 module.exports = {
     existeRolID,
     existeDepartamentoID,
@@ -143,6 +155,7 @@ module.exports = {
     existeDenuncianteID,
     existeEmergenciaID,
     existeOperadorID,
+    existeTipoEmergenciaID,
     existeAlertaID,
     duplicadoUSER,
     existeUsuario,

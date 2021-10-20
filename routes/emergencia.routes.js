@@ -22,7 +22,8 @@ const {
 const { 
     existeNivelID, 
     existeDenuncianteID, 
-    existeEmergenciaID 
+    existeEmergenciaID, 
+    existeTipoEmergenciaID
 } = require('../helpers/db-validators.helper');
 
 
@@ -34,7 +35,7 @@ router.get('/', obtenerEmergencia)
 /** OBTENER EMERGENCIA BY ID */
 router.get('/:emergenciaID', [
     validarJWT,
-    validarROL('ADMIN_ROL', 'DEP_ROL'),
+    validarROL('ADMIN_ROL', 'DEP_ROL', 'USER_ROL'),
     check('emergenciaID', 'La Emergencia ID es obligatorio').not().isEmpty(),
     check('emergenciaID', 'La Emergencia ID no existe en la base de datos').custom(existeEmergenciaID),
     validarCampos
@@ -47,14 +48,20 @@ router.post('/', [
     validarROL('ADMIN_ROL', 'DEP_ROL', 'USER_ROL'),
     check('relatoria', 'Ingrese la relatoria'),
     check('direccion', 'Ingrese la direccion'),
-    // check('longitud', 'Ingrese la longitud').not().isEmpty(),
-    // check('latitud', 'Ingrese la latitud').not().isEmpty(),
+    check('longitud', 'Ingrese la longitud'),
+    check('latitud', 'Ingrese la latitud'),
     check('direccion', 'Ingrese la direccion'),
-    check('img'),
-    check('nivel', 'El Nivel ID no es un ID valido').isMongoId(),
-    check('nivel', 'El Nivel ID no es un ID valido de Base de Datos').custom(existeNivelID),
+    check('img', 'Ingrese la direccion'),
+    check('nivel', 'El Nivel ID no es un ID valido'),
+    check('nivel', 'El Nivel ID no es un ID valido de Base de Datos'),
+    check('estados', 'El Estado ID no es un ID valido'),
+    check('estados', 'El Estado ID no es un ID valido de Base de Datos'),
+    // check('nivel', 'El Nivel ID no es un ID valido').isMongoId(),
+    // check('nivel', 'El Nivel ID no es un ID valido de Base de Datos').custom(existeNivelID),
     check('denunciante', 'El celular es obligatorio').not().isEmpty(),
     check('denunciante', 'El celular debe ser unico').custom(existeDenuncianteID),
+    check('tipo_emergencia', 'El Tipo Emergencia ID no es un ID valido').isMongoId(),
+    check('tipo_emergencia', 'El Tipo Emergencia ID no es un ID valido de Base de Datos').custom(existeTipoEmergenciaID),
     validarCampos
 ], crearEmergencia)
 

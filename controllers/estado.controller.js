@@ -17,6 +17,7 @@ const obtenerEstado = async (req =request, resp = response) => {
     // validamos si existen registros para mostrar
     if (total === 0) {
         return resp.status(404).json({
+            total,
             msg: 'No hay registros'
         })
     }

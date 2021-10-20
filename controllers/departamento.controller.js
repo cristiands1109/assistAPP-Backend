@@ -17,6 +17,7 @@ const obtenerDepartamento = async (req = request, resp = response) => {
     // hacemos la validacion para saber si existen registro para mostrar
     if( total === 0) {
         return resp.status(404).json({
+            total,
             msg: 'No hay registros'
         })
     }
@@ -46,6 +47,7 @@ const obtenerDepartamentobyID = async (req = request, resp = response) => {
             msg: 'El registro no existe en la base de datos'
         })
     }
+    
     // en caso que este todo bien procedemos a mostrar el mensaje
     resp.status(200).json(departamentoDB);
 
@@ -67,9 +69,11 @@ const crearDepartamento = async (req = request, resp = response) => {
     // en caso de que exista ya un departamento igual
     // mostramos el mesaje de peticion
     if(departamentoDB) {
-        return resp.status(400).json({
-            msg: `El departamento ${data}, ya existe en la base de datos`
-        })
+        
+            return resp.status(400).json({
+                msg: `El departamento ${data}, ya existe en la base de datos`
+            })
+        
     }
 
     // en caso que no existe entonces procedemos a la insersion
@@ -133,7 +137,7 @@ const eliminarDepartemento = async (req = request, resp = response) => {
     }
 
     // realiza la actualizacion
-    const departamentoDB = await Departamento.findByIdAndUpdate(departamentoID, {estado: false});
+    const departamentoDB = await Departamento.findByIdAndDelete(departamentoID);
 
     // en caso que todo se haya realizado con exito entonces se procede a mostrar el mensaje
     resp.status(200).json({

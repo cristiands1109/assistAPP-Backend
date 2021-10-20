@@ -21,15 +21,29 @@ const EmergenciaSchema = Schema({
         type: Boolean,
         default: true
     },
+    emitido: {
+        type: Boolean,
+        default: false
+    },
     nivel: {
         type: Schema.Types.ObjectId,
         ref: 'Nivele',
-        required: [true, 'El nivel ID es obligatorio']
+        // required: [true, 'El nivel ID es obligatorio']
+    },
+    estados: {
+        type: Schema.Types.ObjectId,
+        ref: 'Estado',
+        // required: [true, 'El ID Estado es obligatorio']
     },
     denunciante: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario',
         required: [true, 'El celular es obligatorio']
+    },
+    tipo_emergencia: {
+        type: Schema.Types.ObjectId,
+        ref: 'TipoEmergencia',
+        required: [true, 'El tipo de emergencia es obligatorio']
     }
 }, {
     timestamps: true

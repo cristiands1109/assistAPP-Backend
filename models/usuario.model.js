@@ -3,7 +3,7 @@ const {model, Schema} = require('mongoose');
 
 const UsuarioSchema = Schema({
     celular: {
-        type: Number,
+        type: String,
         required: [true, 'El celular es obligatorio'],
         unique: [true, 'El registro es unico']
     },
@@ -31,12 +31,14 @@ const UsuarioSchema = Schema({
     ciudad: {
         type: Schema.Types.ObjectId,
         ref: 'Ciudade',
-        required: [true, 'La ciudad ID es obligatoria']
+        // default: null,
+        // required: [true, 'La ciudad ID es obligatoria']
     },
     departamento: {
         type: Schema.Types.ObjectId,
         ref: 'Departamento',
-        required: [true, 'El departamento ID es obligatorio']
+        // default: null,
+        // required: [true, 'El departamento ID es obligatorio']
     }
 }, {
     timestamps: true

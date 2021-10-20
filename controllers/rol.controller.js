@@ -17,6 +17,7 @@ const obtenerRol = async (req = request, resp = response) => {
    // validacion que verifica que existan registros en la base de datos si no existen mmuesta un mensaje
    if( total == 0) {
        return resp.status(404).json({
+           total,
            msg: 'No hay registros'
        })
    }

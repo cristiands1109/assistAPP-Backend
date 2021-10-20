@@ -6,7 +6,7 @@ const getResultGeo = (ip = '', accesskey = '') => {
 
         ipstack(ip, accesskey, (err, result) => {
             if (err) {
-                console.log('err');
+                // console.log('err');
                 return reject(err);
             }
             resolve(result)
